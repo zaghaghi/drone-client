@@ -222,6 +222,13 @@ class DroneClient(object):
         """Synchronizes and returns the updated repository list."""
         return self._post("/api/user/repos")
 
+    def sign(self, owner, repo, data):
+        """Sign the config yaml file"""
+        post_data = {
+            "data": data
+        }
+        return self._post("/api/repos/{}/{}/sign".format(owner, repo), post_data)
+
     def get_self(self):
         """Returns the currently authenticated user."""
         return self._get("/api/user")
@@ -251,14 +258,14 @@ class DroneClient(object):
             headers["X-CSRF-TOKEN"] = self.csrf
         if data:
             headers["Content-Type"] = "application/json"
-            data = json.dumps(data)
+            data = json.dumps(data).encode('utf-8')
         req = Request(url, data=data, method=method, headers=headers)
         resp = urlopen(req)
         content = resp.read().decode("utf-8")
         content_type = resp.headers.get("Content-Type", "")
         if resp.code < 300:
             if content_type.startswith("application/json"):
-                content = json.dumps(content)
+                content = json.loads(content)
             return content
         return {"status": resp.code, "message": content}
 
