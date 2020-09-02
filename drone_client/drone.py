@@ -177,7 +177,7 @@ class DroneClient(object):
         """
         return self._post("/api/repos/{}/{}/secrets".format(owner, repo), secret)
 
-    def update_secret(self, owner, repo, secret):
+    def update_secret(self, owner, repo, name, secret):
         """Updates the named repository secret.
         
         Keyword arguments:
@@ -185,7 +185,7 @@ class DroneClient(object):
         repo -- repository name.
         secret -- secret details.
         """
-        return self._patch("/api/repos/{}/{}/secrets".format(owner, repo), secret)
+        return self._patch("/api/repos/{}/{}/secrets/{}".format(owner, repo, name), secret)
 
     def delete_secret(self, owner, repo, secret):
         """Deletes the named repository secret.
